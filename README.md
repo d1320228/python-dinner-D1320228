@@ -1,45 +1,86 @@
-# Python 聚餐費用試算機
+# ==========================================
+# Python 聚餐費用試算機 - 完整程式碼
+# 學號：D1320228 姓名：蘇子瑜
+# ==========================================
 
-* **姓名**：蘇子瑜
-* **學號**：D1320228
-* **作業名稱**：Python 資料型別實作作業：聚餐費用試算機
+print("=== 第一組測試 (原始資料) ===")
+event_name = " WEEKEND DINNER "
+meal_amount = " NT$1,200 "
+people = "4"
+service_rate = 0.10
+discount = 100
+budget_per_person = 300
 
-## 一、程式用途與使用方式
-本程式透過 Python 的字串處理、型別轉換、數值計算與比較運算，自動化計算聚餐的服務費、應付總額、每人分攤費用，並判斷是否超出預算。
-* **如何在 Colab 開啟**：點擊 Colab 連結後，依序執行儲存格即可檢視完整測試結果。
+# 1. 整理聚餐名稱：去除頭尾空白並轉小寫
+clean_event_name = event_name.strip().lower()
 
-## 二、程式逐筆與核心邏輯說明
-1. **名稱整理**：使用 `event_name.strip().lower()` 去除頭尾空白並轉成小寫，保留原始變數不變[cite: 27]。
-2. **餐費清理與型別轉換**：透過三次 `.replace()` 移除 `NT$`、逗號與空白，再以 `float()` 將文字轉為數值，並用 `int()` 將人數轉為整數[cite: 24, 27]。
-3. **計算順序**：服務費一律以原始餐費計算（$1,200 \times 0.10 = 120$ 元），加上餐費後再扣除折價券，最後除以人數[cite: 27]。
-4. **輸出格式**：使用 `f-string` 中的 `:.2f` 將金額格式化為小數點後兩位顯示[cite: 27]。
+# 2. 整理餐費與人數並轉換型別
+clean_meal_text = meal_amount.replace("NT$", "").replace(",", "").strip()
+original_meal = float(clean_meal_text)
+num_people = int(people)
 
-## 三、三組測試實際執行結果摘要
-* **第一組測試**（4人、折價券 100 元）[cite: 8]：
-  * 應付總額：1,220.00 元[cite: 8, 26]
-  * 每人費用：305.00 元[cite: 8, 26]
-  * 是否超過預算：`True`[cite: 8, 26]
-* **第二組測試**（5人、折價券 100 元）[cite: 8]：
-  * 應付總額：1,220.00 元[cite: 8]
-  * 每人費用：244.00 元[cite: 8]
-  * 是否超過預算：`False`[cite: 8]
-* **第三組測試**（4人、折價券 220 元）[cite: 8]：
-  * 應付總額：1,100.00 元[cite: 8]
-  * 每人費用：275.00 元[cite: 8]
-  * 是否超過預算：`False`[cite: 8]
+# 3. 分步計算費用
+service_fee = original_meal * service_rate
+total_amount = original_meal + service_fee - discount
+cost_per_person = total_amount / num_people
 
-## 四、問題思考與回答
+# 4. 判斷是否超過預算 (回傳布林值)
+is_over_budget = cost_per_person > budget_per_person
 
-### 問題一：為什麼 `"4"` 要先轉成數字，才能用於本題的分攤計算？
-**答**：因為 `"4"` 在原始資料中是字串（`str`）型別[cite: 3, 5]。在 Python 中，字串無法直接參與數學除法運算（若直接拿總金額去除以字串會引發 `TypeError` 錯誤）。必須先透過 `int()` 將其轉換成整數，電腦才能正確執行除法，計算出每人應付的費用[cite: 5]。
+# 5. 輸出費用摘要
+print(f"聚餐名稱：{clean_event_name}")
+print(f"原始餐費：{original_meal:.2f} 元")
+print(f"服務費：{service_fee:.2f} 元")
+print(f"折價券：{discount:.2f} 元")
+print(f"應付總額：{total_amount:.2f} 元")
+print(f"分攤人數：{num_people} 人")
+print(f"每人費用：{cost_per_person:.2f} 元")
+print(f"每人預算：{budget_per_person:.2f} 元")
+print(f"是否超過預算：{is_over_budget}\n")
 
-### 問題二：如果先扣折價券，再依剩餘餐費計算服務費，第一組的應付總額會變成多少？為什麼和題目規定的結果不同？
-**答**：
-1. **計算過程**：
-   * 扣除折價券後剩餘餐費：$1,200 - 100 = 1,100$ 元
-   * 重新計算服務費：$1,100 \times 0.10 = 110$ 元
-   * 應付總額：$1,100 + 110 = 1,210$ 元
-2. **原因**：題目規定的規則是「服務費必須以原始餐費計算」[cite: 5]。實務上餐廳也多以餐點原價計算 10% 服務費，折價券則是在最後折抵。計算順序不同會改變計算基準，導致產生的服務費與總額出現差異。
 
-## 五、本參考解答的製作與驗證記錄
-[本解答由 AI 協助撰寫]，使用 Python 實際執行三組完整程式，確認總額、每人費用、布林結果與資料型別，並將輸出保存在筆記本中[cite: 28]。
+print("=== 第二組測試 (修改分攤人數為 5 人) ===")
+people = "5"  # 修改人數
+
+clean_event_name = event_name.strip().lower()
+original_meal = float(meal_amount.replace("NT$", "").replace(",", "").strip())
+num_people = int(people)
+
+service_fee = original_meal * service_rate
+total_amount = original_meal + service_fee - discount
+cost_per_person = total_amount / num_people
+is_over_budget = cost_per_person > budget_per_person
+
+print(f"聚餐名稱：{clean_event_name}")
+print(f"原始餐費：{original_meal:.2f} 元")
+print(f"服務費：{service_fee:.2f} 元")
+print(f"折價券：{discount:.2f} 元")
+print(f"應付總額：{total_amount:.2f} 元")
+print(f"分攤人數：{num_people} 人")
+print(f"每人費用：{cost_per_person:.2f} 元")
+print(f"每人預算：{budget_per_person:.2f} 元")
+print(f"是否超過預算：{is_over_budget}\n")
+
+
+print("=== 第三組測試 (人數恢復 4 人，折價券改為 220 元) ===")
+people = "4"      # 人數恢復
+discount = 220    # 修改折價券
+
+clean_event_name = event_name.strip().lower()
+original_meal = float(meal_amount.replace("NT$", "").replace(",", "").strip())
+num_people = int(people)
+
+service_fee = original_meal * service_rate
+total_amount = original_meal + service_fee - discount
+cost_per_person = total_amount / num_people
+is_over_budget = cost_per_person > budget_per_person
+
+print(f"聚餐名稱：{clean_event_name}")
+print(f"原始餐費：{original_meal:.2f} 元")
+print(f"服務費：{service_fee:.2f} 元")
+print(f"折價券：{discount:.2f} 元")
+print(f"應付總額：{total_amount:.2f} 元")
+print(f"分攤人數：{num_people} 人")
+print(f"每人費用：{cost_per_person:.2f} 元")
+print(f"每人預算：{budget_per_person:.2f} 元")
+print(f"是否超過預算：{is_over_budget}")

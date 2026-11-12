@@ -1,86 +1,38 @@
-# ==========================================
-# Python 聚餐費用試算機 - 完整程式碼
-# 學號：D1320228 姓名：蘇子瑜
-# ==========================================
+# Python 聚餐費用試算器
 
-print("=== 第一組測試 (原始資料) ===")
-event_name = " WEEKEND DINNER "
-meal_amount = " NT$1,200 "
-people = "4"
-service_rate = 0.10
-discount = 100
-budget_per_person = 300
+- 姓名：蘇子瑜
+- 學號：D1320228
 
-# 1. 整理聚餐名稱：去除頭尾空白並轉小寫
-clean_event_name = event_name.strip().lower()
+## 程式用途與執行方式
 
-# 2. 整理餐費與人數並轉換型別
-clean_meal_text = meal_amount.replace("NT$", "").replace(",", "").strip()
-original_meal = float(clean_meal_text)
-num_people = int(people)
+程式整理聚餐名稱與餐費文字，計算服務費、應付總額及每人費用，再判斷是否超過每人預算。
 
-# 3. 分步計算費用
-service_fee = original_meal * service_rate
-total_amount = original_meal + service_fee - discount
-cost_per_person = total_amount / num_people
+將本儲存庫中的筆記本檔案上傳至 Google Colab，依序執行三組測試的完整程式碼儲存格，即可重現結果。
 
-# 4. 判斷是否超過預算 (回傳布林值)
-is_over_budget = cost_per_person > budget_per_person
+## 測試結果
 
-# 5. 輸出費用摘要
-print(f"聚餐名稱：{clean_event_name}")
-print(f"原始餐費：{original_meal:.2f} 元")
-print(f"服務費：{service_fee:.2f} 元")
-print(f"折價券：{discount:.2f} 元")
-print(f"應付總額：{total_amount:.2f} 元")
-print(f"分攤人數：{num_people} 人")
-print(f"每人費用：{cost_per_person:.2f} 元")
-print(f"每人預算：{budget_per_person:.2f} 元")
-print(f"是否超過預算：{is_over_budget}\n")
+| 測試 | 人數 | 折價券 | 服務費 | 應付總額 | 每人費用 | 超過每人預算 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 第一組 | 4 | 100 元 | 120 元 | 1,220 元 | 305 元 | `True` |
+| 第二組 | 5 | 100 元 | 120 元 | 1,220 元 | 244 元 | `False` |
+| 第三組 | 4 | 220 元 | 120 元 | 1,100 元 | 275 元 | `False` |
 
+## 問題回答
 
-print("=== 第二組測試 (修改分攤人數為 5 人) ===")
-people = "5"  # 修改人數
+### 1. 為什麼文字人數要轉成數字？
+因為原始資料中的人數（例如 `"4"`）是字串（`str`）型別。在 Python 中，字串無法直接參與數學除法運算（若直接拿總金額去除以字串會引發 `TypeError` 錯誤），必須先透過 `int()` 將其轉換成整數，才能正確執行除法來計算每人分攤的費用。
 
-clean_event_name = event_name.strip().lower()
-original_meal = float(meal_amount.replace("NT$", "").replace(",", "").strip())
-num_people = int(people)
+### 2. 先扣折價券再計算服務費時，第一組總額為何會變成 1,210 元？
+因為計算順序改變了計費基準：
+1. 若先扣除折價券：$1,200 - 100 = 1,100$ 元。
+2. 接著以剩餘金額計算 10% 服務費：$1,100 \times 0.10 = 110$ 元。
+3. 最終應付總額變為：$1,100 + 110 = 1,210$ 元。
+這與題目規定的「服務費必須以原始餐費計算（$1,200 \times 0.10 = 120$ 元）」不同，因此先後順序會導致最終算出的服務費與總額產生差異。
 
-service_fee = original_meal * service_rate
-total_amount = original_meal + service_fee - discount
-cost_per_person = total_amount / num_people
-is_over_budget = cost_per_person > budget_per_person
+## AI 使用紀錄
 
-print(f"聚餐名稱：{clean_event_name}")
-print(f"原始餐費：{original_meal:.2f} 元")
-print(f"服務費：{service_fee:.2f} 元")
-print(f"折價券：{discount:.2f} 元")
-print(f"應付總額：{total_amount:.2f} 元")
-print(f"分攤人數：{num_people} 人")
-print(f"每人費用：{cost_per_person:.2f} 元")
-print(f"每人預算：{budget_per_person:.2f} 元")
-print(f"是否超過預算：{is_over_budget}\n")
+- 使用工具：Gemini
+- 主要提示詞：請協助規劃 Python 聚餐費用試算機的資料清理、型別轉換與分步計算邏輯，並協助檢查三組測試結果。
+- 修改或驗證：透過 AI 協助梳理字串取代與型別轉換步驟，並在 Google Colab 中實際執行驗證，確認三組測試的輸出結果與預期完全相符。
 
-
-print("=== 第三組測試 (人數恢復 4 人，折價券改為 220 元) ===")
-people = "4"      # 人數恢復
-discount = 220    # 修改折價券
-
-clean_event_name = event_name.strip().lower()
-original_meal = float(meal_amount.replace("NT$", "").replace(",", "").strip())
-num_people = int(people)
-
-service_fee = original_meal * service_rate
-total_amount = original_meal + service_fee - discount
-cost_per_person = total_amount / num_people
-is_over_budget = cost_per_person > budget_per_person
-
-print(f"聚餐名稱：{clean_event_name}")
-print(f"原始餐費：{original_meal:.2f} 元")
-print(f"服務費：{service_fee:.2f} 元")
-print(f"折價券：{discount:.2f} 元")
-print(f"應付總額：{total_amount:.2f} 元")
-print(f"分攤人數：{num_people} 人")
-print(f"每人費用：{cost_per_person:.2f} 元")
-print(f"每人預算：{budget_per_person:.2f} 元")
-print(f"是否超過預算：{is_over_budget}")
+[本解答由AI 協助撰寫]
